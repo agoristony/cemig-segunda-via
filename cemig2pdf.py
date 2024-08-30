@@ -1,4 +1,3 @@
-from operator import is_
 import click, json
 import cemigweb
 from settings import CEMIG_USERNAME, CEMIG_PASSWORD
@@ -10,7 +9,6 @@ customer = cemigweb.Customer(CEMIG_USERNAME, CEMIG_PASSWORD)
 @click.option('--pdf', '-p', default=False, help='Get PDF', is_flag=True)
 @click.option('--identifier', '-i' , default=None, help='Bill identifier')
 @click.option('--all', '-a', default=False, help='Get all bills', is_flag=True)
-
 def main(site,pdf,identifier,all):
     if site:
         site = str(site)
@@ -27,8 +25,8 @@ def get_bill_details(site, identifier):
     print(json.dumps(customer.get_bill_details(customer.sites[site]['id'], identifier), indent=4))
 
 def get_pdf(site, identifier):
-    customer.get_bill_pdf(customer.sites[site], identifier)
-    print(f'PDF saved as conta-{site}-{identifier}.pdf')
+    response = customer.get_bill_pdf(customer.sites[site], identifier)
+    print(json.dumps(response, indent=4))
         
 def get_bills(site, all=False):
     bills_history = customer.get_bills_history(customer.sites[site])
@@ -43,7 +41,6 @@ def get_bills(site, all=False):
     
 def get_sites():
     print(json.dumps(customer.sites, indent=4))
-    
     
 if __name__ == '__main__':
     main()
